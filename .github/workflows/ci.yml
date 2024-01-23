@@ -1,4 +1,4 @@
-name: Deploy analyze unused service account
+name: test
 
 on:
   push:
@@ -12,6 +12,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: echo
-        run: echo ${ACTION_LINK}
+        run: echo "$ACTION_LINK"
         env:
-          ACTION_LINK: ${{ GITHUB_SERVER_URL }} ${{ github.repository_owner }}
+          ACTION_LINK: ${{github.server_url}}/${{ github.repository }}/actions/runs/${{ github.run_id }}
