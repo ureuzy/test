@@ -1,0 +1,17 @@
+name: Deploy analyze unused service account
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: echo
+        run: echo ${ACTION_LINK}
+        env:
+          ACTION_LINK: ${{ GITHUB_SERVER_URL }} ${{ github.repository_owner }}
