@@ -6,7 +6,8 @@ on:
 
 jobs:
   get-pr-branch-name:
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/merge')
+    # PR内のコメント且つ、PRがopen状態且つ、/mergeのコメントで実行
+    if: github.event.issue.pull_request && github.event.issue.state == 'open' && startsWith(github.event.comment.body, '/merge')
     runs-on: ubuntu-latest
     outputs:
       branchName: ${{ steps.get-pr-branch-name.outputs.branchName }}
@@ -35,10 +36,6 @@ jobs:
           dir_names: true
           matrix: true
           base_sha: main
-      - uses: actions/checkout@v4
-      - run: | 
-          git branch -a
-          ls -a
   check-drift:
     needs: [ changes ]
     runs-on: ubuntu-latest
@@ -53,12 +50,29 @@ jobs:
       pull-requests: write
     steps:
     - uses: actions/checkout@v4
-    - run: |
-        git branch -a
-    - name: echo
+    - name: check drift
       run: |
         cd ${{ matrix.paths }}
-        echo check drift
-        aaa
+  merge:
+    needs: [ check-drift ]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write    
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        git branch -a
+    - name: merge
+      run: |
+        gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/ureuzy/test/pulls/${{ github.event.issue.number }}/merge \
+           -f "commit_title=Expand enum" -f "commit_message=Add a new value to the merge_method enum"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
     
   
