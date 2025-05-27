@@ -26,6 +26,7 @@ jobs:
       pull-requests: read  
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - id: changed-dirs
         uses: tj-actions/changed-files@v46
         with:
