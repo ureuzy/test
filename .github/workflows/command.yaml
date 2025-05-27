@@ -1,0 +1,14 @@
+name: slash-command
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  aaa:
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/merge')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+    
+  
