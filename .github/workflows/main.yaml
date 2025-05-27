@@ -16,7 +16,7 @@ permissions: {}
 jobs:
   changes:
     outputs:
-      changes: ${{ steps.changed-dirs.outputs.all_modified_files }}
+      paths: ${{ steps.changed-dirs.outputs.all_modified_files }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,15 +27,15 @@ jobs:
       uses: tj-actions/changed-files@v46
       with:
         dir_names: true
-
-  terraform:
+        matrix: true
+  tasks:
     needs: [ changes ]
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.changes && needs.changes.outputs.changes != '[]' }}
+    if: ${{ needs.changes.outputs.paths && needs.changes.outputs.paths != '[]' }}
     strategy:
       fail-fast: false
       matrix:
-        dir: ${{ fromJSON(needs.changes.outputs.changes) }}
+        paths: ${{ fromJSON(needs.changes.outputs.paths) }}
     permissions:
       id-token: write
       contents: write
@@ -44,6 +44,6 @@ jobs:
     - uses: marocchino/sticky-pull-request-comment@v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        header: ${{ matrix.dir.workdir }}
+        header: ${{ matrix.paths }}
         message: |
-          Test ${{ matrix.dir.workdir }} ended successfully.
+          Test ${{ matrix.paths }} ended successfully.
