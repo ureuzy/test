@@ -27,7 +27,7 @@ jobs:
       uses: tj-actions/changed-files@v46
       with:
         dir_names: true
-
+        matrix: true
   tasks:
     needs: [ changes ]
     runs-on: ubuntu-latest
@@ -44,6 +44,6 @@ jobs:
     - uses: marocchino/sticky-pull-request-comment@v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        header: ${{ matrix.paths.workdir }}
+        header: ${{ matrix.paths }}
         message: |
-          Test ${{ matrix.paths.workdir }} ended successfully.
+          Test ${{ matrix.paths }} ended successfully.
