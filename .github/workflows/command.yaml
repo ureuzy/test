@@ -34,7 +34,10 @@ jobs:
         with:
           dir_names: true
           matrix: true
-  tasks:
+      - uses: actions/checkout@v4
+      - run: | 
+          git branch -a
+  check-drift:
     needs: [ changes ]
     runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.paths && needs.changes.outputs.paths != '[]' }}
@@ -49,6 +52,8 @@ jobs:
     steps:
     - name: echo
       run: |
-        echo ${{ matrix.paths }}
+        cd ${{ matrix.paths }}
+        echo check drift
+        aaa
     
   
