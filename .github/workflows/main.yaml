@@ -30,6 +30,7 @@ jobs:
 
   terraform:
     needs: [ changes ]
+    runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.changes && needs.changes.outputs.changes != '[]' }}
     strategy:
       fail-fast: false
@@ -39,9 +40,10 @@ jobs:
       id-token: write
       contents: write
       pull-requests: write
-    uses: marocchino/sticky-pull-request-comment@v1
-    with:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      header: ${{ matrix.dir.workdir }}
-      message: |
-        Test ${{ matrix.dir.workdir }} ended successfully.
+    steps:
+    - uses: marocchino/sticky-pull-request-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        header: ${{ matrix.dir.workdir }}
+        message: |
+          Test ${{ matrix.dir.workdir }} ended successfully.
