@@ -34,9 +34,11 @@ jobs:
         with:
           dir_names: true
           matrix: true
+          base_sha: main
       - uses: actions/checkout@v4
       - run: | 
           git branch -a
+          ls -a
   check-drift:
     needs: [ changes ]
     runs-on: ubuntu-latest
