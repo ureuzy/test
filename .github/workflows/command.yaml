@@ -5,12 +5,50 @@ on:
     types: [created]
 
 jobs:
-  aaa:
+  get-pr-branch-name:
     if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/merge')
+    runs-on: ubuntu-latest
+    outputs:
+      branchName: ${{ steps.get-pr-branch-name.outputs.branchName }}
+    steps:
+      - id: get-pr-branch-name
+        run: |
+          branchName=$(gh pr view ${{ github.event.issue.number }} --json "headRefName" --jq ".headRefName" --repo ${{ github.repository }})
+          echo "branchName=$branchName" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  changes:
+    needs: [ get-pr-branch-name ]
+    outputs:
+      paths: ${{ steps.changed-dirs.outputs.all_modified_files }}
+    permissions:
+      contents: read
+      pull-requests: read  
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: aaa
-        run: echo ${{ github.event.issue.number }}
+        with:
+          ref: ${{ needs.get-pr-branch-name.outputs.branchName }}
+      - id: changed-dirs
+        uses: tj-actions/changed-files@v46
+        with:
+          dir_names: true
+          matrix: true
+  tasks:
+    needs: [ changes ]
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.paths && needs.changes.outputs.paths != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        paths: ${{ fromJSON(needs.changes.outputs.paths) }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+    - name: echo
+      run: |
+        echo ${{ matrix.paths }}
     
   
