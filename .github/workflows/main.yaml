@@ -40,8 +40,8 @@ jobs:
       contents: write
       pull-requests: write
     uses: marocchino/sticky-pull-request-comment@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        header: ${{ matrix.dir.workdir }}
-        message: |
-          Test ${{ matrix.dir.workdir }} ended successfully.
+    with:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      header: ${{ matrix.dir.workdir }}
+      message: |
+        Test ${{ matrix.dir.workdir }} ended successfully.
