@@ -26,14 +26,12 @@ jobs:
       pull-requests: read  
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.get-pr-branch-name.outputs.branchName }}
       - id: changed-dirs
         uses: tj-actions/changed-files@v46
         with:
           dir_names: true
           matrix: true
+          base_sha: ${{ needs.get-pr-branch-name.outputs.branchName }}
   tasks:
     needs: [ changes ]
     runs-on: ubuntu-latest
