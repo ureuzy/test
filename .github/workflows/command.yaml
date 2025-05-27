@@ -21,7 +21,6 @@ jobs:
     needs: [ get-pr-branch-name ]
     outputs:
       paths: ${{ steps.changed-dirs.outputs.all_modified_files }}
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: read  
