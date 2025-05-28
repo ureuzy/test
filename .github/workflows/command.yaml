@@ -68,5 +68,7 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/ureuzy/test/pulls/${{ github.event.issue.number }}/merge \
            -f "commit_title=Expand enum" -f "commit_message=Add a new value to the merge_method enum"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
     
   
