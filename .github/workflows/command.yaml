@@ -60,5 +60,15 @@ jobs:
         cd ${{ matrix.paths }}
         echo check drift
         aaa
+  merge:
+    needs: [ check-drift ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: |
+        git branch -a
+    - name: echo
+      run: |
+        echo merge
     
   
