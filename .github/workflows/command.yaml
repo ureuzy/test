@@ -50,7 +50,19 @@ jobs:
       pull-requests: write
     steps:
     - uses: actions/checkout@v4
+
+    - name: check dir
+      id: check_dir
+      run: |
+        if [ -d ${{ matrix.paths }} ]; then
+          echo "exist_dir=true" >> $GITHUB_OUTPUT
+        else
+          echo "exist_dir=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: check drift
+      if: ${{ steps.check_dir.outputs.exist_dir }}
+      working-directory: ${{ matrix.paths }}
       run: |
         cd ${{ matrix.paths }}
   merge:
@@ -71,7 +83,7 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/ureuzy/test/pulls/${{ github.event.issue.number }}/merge \
-           -f "commit_message=Merge branch ${{ steps.get-pr-branch-name.outputs.branchName }} into main"
+           -f "commit_message=Merged by command"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
     
