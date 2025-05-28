@@ -56,11 +56,15 @@ jobs:
   merge:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write    
     steps:
     - uses: actions/checkout@v4
     - run: |
         git branch -a
-    - name: echo
+    - name: merge
       run: |
         gh api \
           --method PUT \
