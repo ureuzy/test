@@ -58,8 +58,11 @@ jobs:
     - name: echo
       run: |
         cd ${{ matrix.paths }}
-        echo check drift
-        aaa
+        if [ ${{ matrix.paths }} = "hoge" ]; then
+          echo "hoge"
+        else
+          fail
+        fi
   merge:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
