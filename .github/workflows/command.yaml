@@ -64,7 +64,7 @@ jobs:
         fi
 
     - name: check drift
-      if: ${{ steps.check_dir.outputs.exist_dir }}
+      if: steps.check_dir.outputs.exist_dir == 'true'
       working-directory: ${{ matrix.paths }}
       run: |
         ls
