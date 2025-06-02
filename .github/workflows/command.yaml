@@ -67,27 +67,42 @@ jobs:
       if: steps.check_dir.outputs.exist_dir == 'true'
       working-directory: ${{ matrix.paths }}
       run: |
-        ls
-  merge:
+        if [ "hoge" = ${{ matrix.paths }} ]; then
+          exit 1
+        else
+          exit 0
+        fi
+  
+  comment:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write
-      pull-requests: write    
+    if: ${{ always() && contains(needs.check-drift.result, 'failure') }}
     steps:
     - uses: actions/checkout@v4
-    - run: |
-        git branch -a
-    - name: merge
-      run: |
-        gh api \
-          --method PUT \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/ureuzy/test/pulls/${{ github.event.issue.number }}/merge \
-           -f "commit_message=Merged by command"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
+
+    - name: echo
+      run: echo ${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}
+
+  # merge:
+  #   needs: [ check-drift ]
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: write
+  #     pull-requests: write    
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - run: |
+  #       git branch -a
+  #   - name: merge
+  #     run: |
+  #       gh api \
+  #         --method PUT \
+  #         -H "Accept: application/vnd.github+json" \
+  #         -H "X-GitHub-Api-Version: 2022-11-28" \
+  #         /repos/ureuzy/test/pulls/${{ github.event.issue.number }}/merge \
+  #          -f "commit_message=Merged by command"
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
     
   
