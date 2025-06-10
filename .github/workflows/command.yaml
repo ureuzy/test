@@ -77,6 +77,10 @@ jobs:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
     if: ${{ always() && contains(needs.check-drift.result, 'failure') }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write    
     steps:
     - uses: actions/checkout@v4
 
