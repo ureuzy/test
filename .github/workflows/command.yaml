@@ -76,6 +76,7 @@ jobs:
   comment:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
+    if: ${{ always() && contains(needs.check-drift.result, 'failure') }}
     steps:
     - uses: actions/checkout@v4
 
