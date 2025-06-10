@@ -80,8 +80,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: echo
-      run: echo ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    - name: Create comment file
+      run: |
+        cat  << EOF > comment.md
+        ## Merge Failed
+        The merge failed. Please check the logs for more information.
+        ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        EOF
+
+    - name: Create PR comment
+      run: |
+        gh pr comment ${{ github.event.number }} --body-file comment.md
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # merge:
   #   needs: [ check-drift ]
