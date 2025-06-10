@@ -106,6 +106,4 @@ jobs:
       run: |
         gh pr merge --merge --delete-branch ${{ github.event.issue.number }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}           
-    
-  
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
