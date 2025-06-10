@@ -98,6 +98,21 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  merge:
+    needs: [ check-drift ]
+    runs-on: ubuntu-latest
+    if: ${{ always() && contains(needs.check-drift.result, 'failure') }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write    
+    steps:
+    - name: merge
+      run: |
+        gh pr merge --merge --delete-branch ${{ github.event.issue.number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # merge:
   #   needs: [ check-drift ]
   #   runs-on: ubuntu-latest
