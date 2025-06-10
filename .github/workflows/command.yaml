@@ -90,7 +90,7 @@ jobs:
 
     - name: Create PR comment
       run: |
-        gh pr comment ${{ github.event.number }} --body-file comment.md
+        gh pr comment ${{ github.event.issue.number }} --body-file comment.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
