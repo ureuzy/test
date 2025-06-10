@@ -102,6 +102,8 @@ jobs:
       contents: write
       pull-requests: write    
     steps:
+    - uses: actions/checkout@v4
+        
     - name: merge
       run: |
         gh pr merge --merge --delete-branch ${{ github.event.issue.number }}
