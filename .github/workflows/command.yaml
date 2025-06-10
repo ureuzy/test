@@ -97,7 +97,6 @@ jobs:
   merge:
     needs: [ check-drift ]
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(needs.check-drift.result, 'failure') }}
     permissions:
       id-token: write
       contents: write
